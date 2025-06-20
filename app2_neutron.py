@@ -4,7 +4,7 @@ import numpy as np
 import joblib
 import os
 st.set_page_config(page_title="Predicción COSMOS", layout="wide")
-st.title("🌱 Predicción de COSMOS Volumetric Water Content (%)")
+st.title("🌱 Predicción de COSMOS Soil volumetric Water Content (%)")
 
 # Cargar el modelo desde archivo local
 @st.cache_resource
