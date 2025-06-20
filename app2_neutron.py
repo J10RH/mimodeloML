@@ -9,7 +9,7 @@ st.set_page_config(page_title="Predicción COSMOS", layout="wide")
 st.title("🌱 Predicción de COSMOS Volumetric Water Content (%)")
 
 # 🔽 URL del modelo en GitHub (RAW)
-MODEL_URL = "https://raw.githubusercontent.com/usuario/repositorio/main/random_forest_regressor_model.pkl"
+MODEL_URL = "https://raw.githubusercontent.com/J10RH/repositorio/main/random_forest_regressor_model.pkl"
 
 # 🧠 Cargar modelo desde GitHub
 @st.cache_resource
