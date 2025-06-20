@@ -6,17 +6,28 @@ import joblib
 st.set_page_config(page_title="Predicción COSMOS", layout="wide")
 st.title("🌱 Predicción de COSMOS Volumetric Water Content (%)")
 
-# ✅ Cargar modelo desde carpeta local del repositorio
+# Cargar el modelo desde archivo local
 @st.cache_resource
 def cargar_modelo():
-    try:
-        modelo = joblib.load("mimodeloML/random_forest_regressor_model.pkl")
-        return modelo
-    except Exception as e:
-        st.error(f"❌ No se pudo cargar el modelo: {e}")
+    ruta_modelo = "random_forest_regressor_model.pkl"
+    if not os.path.exists(ruta_modelo):
+        st.error(f"❌ El archivo del modelo no se encontró en: {ruta_modelo}")
         st.stop()
+    try:
+        modelo = joblib.load(ruta_modelo)
+    except Exception as e:
+        st.error(f"❌ Error al cargar el modelo: {e}")
+        st.stop()
+    return modelo
 
 modelo = cargar_modelo()
+
+
+
+
+
+
+
 
 # 🧾 Columnas de entrada
 columnas = [
