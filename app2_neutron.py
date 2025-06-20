@@ -6,7 +6,7 @@ import joblib
 st.set_page_config(page_title="Predicción COSMOS", layout="wide")
 st.title("🌱 Predicción de COSMOS Volumetric Water Content (%)")
 
-# ✅ Cargar modelo localmente desde el directorio del repositorio
+# ✅ Cargar modelo desde carpeta local del repositorio
 @st.cache_resource
 def cargar_modelo():
     try:
