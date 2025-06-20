@@ -2,19 +2,23 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-import requests
-import io
+import os
 
-st.set_page_config(page_title="Predicción de Humedad Volumétrica", layout="wide")
-
+st.set_page_config(page_title="🌱 Predicción COSMOS", layout="wide")
 st.title("🌱 Predicción de COSMOS Volumetric Water Content (%)")
 
-# Cargar el modelo desde GitHub
-@st.cache_data
+# Cargar el modelo desde archivo local
+@st.cache_resource
 def cargar_modelo():
-    url_modelo = "https://github.com/usuario/repositorio/raw/main/xgb_mejor_modelo_cv.pkl"
-    response = requests.get(url_modelo)
-    modelo = joblib.load(io.BytesIO(response.content))
+    ruta_modelo = "xgb_mejor_modelo_cv.pkl"
+    if not os.path.exists(ruta_modelo):
+        st.error(f"❌ El archivo del modelo no se encontró en: {ruta_modelo}")
+        st.stop()
+    try:
+        modelo = joblib.load(ruta_modelo)
+    except Exception as e:
+        st.error(f"❌ Error al cargar el modelo: {e}")
+        st.stop()
     return modelo
 
 modelo = cargar_modelo()
@@ -43,19 +47,22 @@ columnas = [
     'Wind Direction - deg', 'Wind Speed - m s-1'
 ]
 
-# Crear un formulario
+# Crear formulario para ingresar valores
 with st.form("formulario_prediccion"):
-    st.subheader("🔢 Ingrese los valores de entrada")
+    st.subheader("🔢 Ingrese los valores requeridos")
 
     valores = []
-    for i, columna in enumerate(columnas):
-        valor = st.number_input(f"{columna}", key=f"{columna}", format="%.4f")
-        valores.append(valor)
+    for col in columnas:
+        val = st.number_input(f"{col}", key=col, format="%.4f")
+        valores.append(val)
 
-    boton_predecir = st.form_submit_button("🔍 Predecir")
+    enviar = st.form_submit_button("🔍 Predecir")
 
-# Cuando el usuario presiona el botón
-if boton_predecir:
-    df_input = pd.DataFrame([valores], columns=columnas)
-    prediccion = modelo.predict(df_input)
-    st.success(f"✅ Predicción de 'COSMOS Volumetric Water Content - %': {prediccion[0]:.2f} %")
+# Predicción al enviar
+if enviar:
+    df = pd.DataFrame([valores], columns=columnas)
+    try:
+        prediccion = modelo.predict(df)
+        st.success(f"✅ Predicción de COSMOS Volumetric Water Content: {prediccion[0]:.2f} %")
+    except Exception as e:
+        st.error(f"❌ Error al realizar la predicción: {e}")
